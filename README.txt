@@ -1,0 +1,9 @@
+Jenny Fu
+JENFU
+112203722
+
+For each packet being sent to layer3 from A, I simply created a new packet. The checksum for these packets were calculated by getting the sum of the ASCII value of each character in the string plus two (one bit for the sequence number and one bit for the ACK number). At first I simply added the length of the string by two. However, while testing the application, I soon realized that the packet can be corrupted by changing one value in the string. With the previous strategy, the packet will not be counted as corrupted, making my program unreliable. I decided to use the ASCII value since each character has a unique value assigned to it. On hindsight, I do realize that the string can use the same number of characters in a different order and my program will not catch this as corrupted. 
+
+I created a global array and a 'waiting' boolean to make sure that the program was only sending one packet to layer3 at a time. To calculate the sequence number of a packet, I started off by creating a global variable, 'count', to calculate how many packets were being created. The packets' seqnum is the value of count, at that specific time, mod 2. This is to make sure that the sequence number is always alternating from 0 and 1.
+
+I also created several other global variables: 'currentPacket', 'prevPacket', and 'prevAck'. 'currentPacket' keeps track of which packet was sent and yet to receive an ACK for. This is used for timeouts, so my program can easily retransmit a packet. 'prevPacket' is used by B_input. This is to tell whether or not a duplicate packet has been sent. 'prevAck' is the acknum to 'prevPacket'. If B receives a duplicate packet, it is able to easily resend the ACK.
